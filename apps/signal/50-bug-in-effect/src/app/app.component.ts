@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   model,
 } from '@angular/core';
@@ -39,14 +40,48 @@ export class AppComponent {
   ram = model(false);
   gpu = model(false);
 
+  checkedCount = computed(() => {
+    return (this.drive() ? 1 : 0) + (this.ram() ? 1 : 0) + (this.gpu() ? 1 : 0);
+  });
+  previousCheckedCount = 0;
+
   constructor() {
-    /* 
-      Explain for your junior team mate why this bug occurs ...
-    */
+    // 1. with computed - Bonus Challenge
     effect(() => {
-      if (this.drive() || this.ram() || this.gpu()) {
+      if (this.previousCheckedCount < this.checkedCount()) {
         alert('Price increased!');
       }
+      this.previousCheckedCount = this.checkedCount();
     });
+
+    // // 2. without computed (Doesnt work correctly. Alerts when unchecking checkboxes)
+    // effect(() => {
+    //   const driveValue = this.drive();
+    //   const ramValue = this.ram();
+    //   const gpuValue = this.gpu();
+
+    //   if (driveValue || ramValue || gpuValue) {
+    //     alert('Price increased!');
+    //   }
+    // });
+
+    // // 3. without computed (Works correctly)
+    // effect(() => {
+    //   if (this.drive()) {
+    //     alert('Price increased!');
+    //   }
+    // });
+
+    // effect(() => {
+    //   if (this.ram()) {
+    //     alert('Price increased!');
+    //   }
+    // });
+
+    // effect(() => {
+    //   if (this.gpu()) {
+    //     alert('Price increased!');
+    //   }
+    // });
   }
 }
