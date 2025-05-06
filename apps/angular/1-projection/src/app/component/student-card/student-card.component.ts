@@ -1,6 +1,8 @@
+import { NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  CUSTOM_ELEMENTS_SCHEMA,
   inject,
   OnInit,
 } from '@angular/core';
@@ -15,7 +17,15 @@ import { CardComponent } from '../../ui/card/card.component';
     <app-card
       [list]="students()"
       [type]="cardType"
-      customClass="bg-light-green" />
+      customClass="bg-light-green">
+      <card-image-content>
+        <img
+          ngSrc="../../../assets/img/student.webp"
+          width="200"
+          height="200"
+          class="card-image" />
+      </card-image-content>
+    </app-card>
   `,
   styles: [
     `
@@ -24,8 +34,9 @@ import { CardComponent } from '../../ui/card/card.component';
       }
     `,
   ],
-  imports: [CardComponent],
+  imports: [CardComponent, NgOptimizedImage],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class StudentCardComponent implements OnInit {
   private http = inject(FakeHttpService);
