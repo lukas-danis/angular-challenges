@@ -13,7 +13,7 @@ import { CardType } from '../../model/card.model';
   selector: 'app-list-item',
   template: `
     <div class="border-grey-300 flex justify-between border px-2 py-1">
-      {{ name() }}
+      <ng-content />
       <button (click)="delete(id())">
         <img class="h-5" src="assets/svg/trash.svg" />
       </button>
@@ -28,7 +28,6 @@ export class ListItemComponent {
   private cityStore = inject(CityStore);
 
   readonly id = input.required<number>();
-  readonly name = input.required<string>();
   readonly type = input.required<CardType>();
 
   delete(id: number) {

@@ -9,11 +9,16 @@ import { FakeHttpService } from '../../data-access/fake-http.service';
 import { TeacherStore } from '../../data-access/teacher.store';
 import { CardType } from '../../model/card.model';
 import { CardComponent } from '../../ui/card/card.component';
+import { ListItemComponent } from '../../ui/list-item/list-item.component';
 
 @Component({
   selector: 'app-teacher-card',
   template: `
-    <app-card [list]="teachers()" [type]="cardType" customClass="bg-light-red">
+    <app-card
+      [list]="teachers()"
+      [type]="cardType"
+      [itemTemplate]="teacherItemTemplate"
+      customClass="bg-light-red">
       <card-image-content>
         <img
           ngSrc="../../../assets/img/teacher.png"
@@ -22,6 +27,12 @@ import { CardComponent } from '../../ui/card/card.component';
           class="card-image" />
       </card-image-content>
     </app-card>
+
+    <ng-template #teacherItemTemplate let-teacher>
+      <app-list-item [id]="teacher.id" [type]="cardType">
+        {{ teacher.firstName }}
+      </app-list-item>
+    </ng-template>
   `,
   styles: [
     `
@@ -30,7 +41,7 @@ import { CardComponent } from '../../ui/card/card.component';
       }
     `,
   ],
-  imports: [CardComponent, NgOptimizedImage],
+  imports: [CardComponent, NgOptimizedImage, ListItemComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class TeacherCardComponent implements OnInit {

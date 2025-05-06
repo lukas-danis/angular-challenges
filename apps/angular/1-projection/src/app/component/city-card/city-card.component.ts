@@ -10,11 +10,16 @@ import { CityStore } from '../../data-access/city.store';
 import { FakeHttpService } from '../../data-access/fake-http.service';
 import { CardType } from '../../model/card.model';
 import { CardComponent } from '../../ui/card/card.component';
+import { ListItemComponent } from '../../ui/list-item/list-item.component';
 
 @Component({
   selector: 'app-city-card',
   template: `
-    <app-card [list]="cities()" [type]="cardType" customClass="bg-light-blue">
+    <app-card
+      [list]="cities()"
+      [type]="cardType"
+      [itemTemplate]="cityItemTemplate"
+      customClass="bg-light-blue">
       <card-image-content>
         <img
           ngSrc="../../../assets/img/city.png"
@@ -23,6 +28,12 @@ import { CardComponent } from '../../ui/card/card.component';
           class="card-image" />
       </card-image-content>
     </app-card>
+
+    <ng-template #cityItemTemplate let-city>
+      <app-list-item [id]="city.id" [type]="cardType">
+        {{ city.name }}
+      </app-list-item>
+    </ng-template>
   `,
   styles: [
     `
@@ -31,7 +42,7 @@ import { CardComponent } from '../../ui/card/card.component';
       }
     `,
   ],
-  imports: [CardComponent, NgOptimizedImage],
+  imports: [CardComponent, NgOptimizedImage, ListItemComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

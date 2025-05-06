@@ -1,14 +1,14 @@
-import { Component, inject, input } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { Component, inject, input, TemplateRef } from '@angular/core';
 import { CityStore } from '../../data-access/city.store';
 import {
+  randomCity,
   randStudent,
   randTeacher,
-  randomCity,
 } from '../../data-access/fake-http.service';
 import { StudentStore } from '../../data-access/student.store';
 import { TeacherStore } from '../../data-access/teacher.store';
 import { CardType } from '../../model/card.model';
-import { ListItemComponent } from '../list-item/list-item.component';
 
 @Component({
   selector: 'app-card',
@@ -20,10 +20,13 @@ import { ListItemComponent } from '../list-item/list-item.component';
 
       <section>
         @for (item of list(); track item) {
-          <app-list-item
-            [name]="item.firstName ?? item.name"
-            [id]="item.id"
-            [type]="type()"></app-list-item>
+          <!-- Use the template passed from the parent card -->
+          <ng-container
+            [ngTemplateOutlet]="itemTemplate()"
+            [ngTemplateOutletContext]="{
+              $implicit: item,
+              type: type()
+            }"></ng-container>
         }
       </section>
 
@@ -34,7 +37,7 @@ import { ListItemComponent } from '../list-item/list-item.component';
       </button>
     </div>
   `,
-  imports: [ListItemComponent],
+  imports: [NgTemplateOutlet],
 })
 export class CardComponent {
   private teacherStore = inject(TeacherStore);
@@ -44,6 +47,7 @@ export class CardComponent {
   readonly list = input<any[] | null>(null);
   readonly type = input.required<CardType>();
   readonly customClass = input('');
+  readonly itemTemplate = input.required<TemplateRef<any>>();
 
   CardType = CardType;
 
