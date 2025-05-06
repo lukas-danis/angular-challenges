@@ -6,7 +6,10 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { FakeHttpService } from '../../data-access/fake-http.service';
+import {
+  FakeHttpService,
+  randStudent,
+} from '../../data-access/fake-http.service';
 import { StudentStore } from '../../data-access/student.store';
 import { CardType } from '../../model/card.model';
 import { CardComponent } from '../../ui/card/card.component';
@@ -17,9 +20,9 @@ import { ListItemComponent } from '../../ui/list-item/list-item.component';
   template: `
     <app-card
       [list]="students()"
-      [type]="cardType"
       [itemTemplate]="studentItemTemplate"
-      customClass="bg-light-green">
+      customClass="bg-light-green"
+      (addEvent)="add()">
       <card-image-content>
         <img
           ngSrc="../../../assets/img/student.webp"
@@ -30,7 +33,7 @@ import { ListItemComponent } from '../../ui/list-item/list-item.component';
     </app-card>
 
     <ng-template #studentItemTemplate let-student>
-      <app-list-item [id]="student.id" [type]="cardType">
+      <app-list-item (deleteEvent)="delete(student.id)">
         {{ student.firstName }}
       </app-list-item>
     </ng-template>
@@ -55,5 +58,13 @@ export class StudentCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.http.fetchStudents$.subscribe((s) => this.store.addAll(s));
+  }
+
+  delete(id: number) {
+    this.store.deleteOne(id);
+  }
+
+  add() {
+    this.store.addOne(randStudent());
   }
 }

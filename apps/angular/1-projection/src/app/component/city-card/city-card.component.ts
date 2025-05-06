@@ -7,7 +7,10 @@ import {
   OnInit,
 } from '@angular/core';
 import { CityStore } from '../../data-access/city.store';
-import { FakeHttpService } from '../../data-access/fake-http.service';
+import {
+  FakeHttpService,
+  randomCity,
+} from '../../data-access/fake-http.service';
 import { CardType } from '../../model/card.model';
 import { CardComponent } from '../../ui/card/card.component';
 import { ListItemComponent } from '../../ui/list-item/list-item.component';
@@ -17,9 +20,9 @@ import { ListItemComponent } from '../../ui/list-item/list-item.component';
   template: `
     <app-card
       [list]="cities()"
-      [type]="cardType"
       [itemTemplate]="cityItemTemplate"
-      customClass="bg-light-blue">
+      customClass="bg-light-blue"
+      (addEvent)="add()">
       <card-image-content>
         <img
           ngSrc="../../../assets/img/city.png"
@@ -30,7 +33,7 @@ import { ListItemComponent } from '../../ui/list-item/list-item.component';
     </app-card>
 
     <ng-template #cityItemTemplate let-city>
-      <app-list-item [id]="city.id" [type]="cardType">
+      <app-list-item (deleteEvent)="delete(city.id)">
         {{ city.name }}
       </app-list-item>
     </ng-template>
@@ -55,5 +58,13 @@ export class CityCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.http.fetchCities$.subscribe((c) => this.store.addAll(c));
+  }
+
+  delete(id: number) {
+    this.store.deleteOne(id);
+  }
+
+  add() {
+    this.store.addOne(randomCity());
   }
 }
